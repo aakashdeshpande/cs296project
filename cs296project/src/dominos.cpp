@@ -84,7 +84,7 @@
 
     {
 
-			/*! Variable -  bd
+			      /*! Variable -  bd
              *  \n \brief A body definition of a pulley wheel
              *  \n Data type -  b2FixtureDef*
              *  \n Values - fixed rotation
@@ -192,6 +192,7 @@
                 rectFixtureDef3.filter.groupIndex = -1;
                 doorRect1->CreateFixture(&rectFixtureDef3);
 
+
         // b2WeldJointDef rodJointDef3;
         // rodJointDef3.bodyA = doorRect1;
         // rodJointDef3.bodyB = doorRect3;
@@ -249,6 +250,18 @@
                 doorBodyFixtureDef.density = 0.1f;
                 doorBodyFixtureDef.filter.groupIndex = -1;
                 doorBody->CreateFixture(&doorBodyFixtureDef);
+
+                b2BodyDef doorBodyDef2;
+                doorBodyDef2.type = b2_dynamicBody;
+                doorBodyDef2.position.Set(1.6,24);
+                b2Body *doorBody2 = m_world->CreateBody(&doorBodyDef2);
+                doorBodyShape.SetAsBox(1.6,4,b2Vec2(0,0),0);
+                doorBodyFixtureDef.shape = &doorBodyShape;
+                doorBody2->CreateFixture(&doorBodyFixtureDef);
+
+                b2WeldJointDef * wj = new b2WeldJointDef;
+                wj->Initialize(box1,doorBody2,box1->GetWorldCenter());
+                m_world->CreateJoint(wj);
 
                 b2PrismaticJointDef doorToBoxJoint;
                 doorToBoxJoint.bodyA = box1;
@@ -325,14 +338,14 @@
              b2Body* ground4 = m_world->CreateBody(&bd4);
              ground4->CreateFixture(fd2);
 
-             b2PrismaticJointDef* prismaticJointDef = new b2PrismaticJointDef;
-             prismaticJointDef->bodyB = ground3;
-             prismaticJointDef->bodyA = box1;
-             prismaticJointDef->collideConnected = false;
-             prismaticJointDef->localAxisA.Set(0,1);
+            b2PrismaticJointDef* prismaticJointDef = new b2PrismaticJointDef;
+            prismaticJointDef->bodyB = ground3;
+            prismaticJointDef->bodyA = box1;
+            prismaticJointDef->collideConnected = false;
+            prismaticJointDef->localAxisA.Set(0,1);
             prismaticJointDef->localAnchorB.Set( 0.5,6);//a little outside the bottom right corner
             prismaticJointDef->localAnchorA.Set(-7,-5);//bottom left corner
-  		    prismaticJointDef->enableMotor = false;//5 units per second in positive axis direction
+  		      prismaticJointDef->enableMotor = false;//5 units per second in positive axis direction
             prismaticJointDef->maxMotorForce = 100000.;
             prismaticJointDef->motorSpeed = 5.;
             prismaticJointDef->enableLimit = true;
@@ -397,7 +410,7 @@
              * \n Values - side fd1
              */
              box2 = m_world->CreateBody(bd);
-             b2Fixture* weights = box2->CreateFixture(fd1);
+             box2->CreateFixture(fd1);
 
 
             /*! Variable -  bs3
@@ -482,7 +495,7 @@
              * \n Values - anchors = twoanchors on bodies worldAnchorOnBody1 and worldAnchorOnBody2, \n
              *                      two anchors on ground worldAnchorGround1 and worldAnchorGround2, ratio
              */
-             b2PulleyJointDef* myjoint = new b2PulleyJointDef();
+            b2PulleyJointDef* myjoint = new b2PulleyJointDef();
             b2Vec2 worldAnchorOnBody1(0, 3); // Anchor point on body 1 in world axis
             b2Vec2 worldAnchorOnBody2(-30, 40); // Anchor point on body 2 in world axis
             b2Vec2 worldAnchorGround1(0, 42); // Anchor point for ground 1 in world axis
@@ -527,7 +540,7 @@ else if(key == 'a'){
 }
 
 else if(key == 'l'){    
-  circleToWorldJoint->SetMotorSpeed(1);
+  circleToWorldJoint->SetMotorSpeed(0.5);
     if((box1->GetWorldCenter()).y >= 25){
       box1->SetType(b2_staticBody);  
   }
@@ -544,7 +557,7 @@ else if(key == 'l'){
 }
 
 else if(key == 'c'){
-  circleToWorldJoint->SetMotorSpeed(0);
+    circleToWorldJoint->SetMotorSpeed(0);
     box1->SetType(b2_dynamicBody);  
     box2->GetWorld()->DestroyBody(box2);  
 }
